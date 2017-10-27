@@ -38,6 +38,22 @@ public:
 		this->_array[this->_rear] = info;
 	}
 
+	int Dequeue() {
+		if (this->isEmpty()) {
+			throw exception("Queue is empty!");
+		}
+		else if (this->_front == this->_rear) {
+			int temp = this->_array[this->_front];
+			this->_front = -1;
+			this->_rear = -1;
+			return temp;
+		}
+		else {
+			int temp = this->_array[this->_front++];
+			return temp;
+		}
+	}
+
 	void PrintQueue() {
 		cout << "Printing queue\n-----------------------------------------------\n";
 		for (int i = this->_front; i <= this->_rear; i++) {
@@ -57,6 +73,11 @@ public:
 		cout << "front = " << this->_front << endl;
 		cout << "rear  = " << this->_rear << endl;
 	}
+	void PrintAll() {
+		this->PrintQueue();
+		this->PrintIndexerStatus();
+		this->PrintBuffer();
+	}
 };
 
 int main() {
@@ -64,9 +85,12 @@ int main() {
 	for (int i = 0; i < 5; i++)
 		q.Enqueue(i);
 
-	q.PrintQueue();
-	q.PrintBuffer();
-	q.PrintIndexerStatus();
+	q.PrintAll();
+
+	for (int i = 0; i < 3; i++)
+		cout << "Dequeue: " << q.Dequeue() << endl;
+
+	q.PrintAll();
 	getchar();
 	return 0;
 }

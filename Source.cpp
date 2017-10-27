@@ -12,7 +12,7 @@ private:
 		return (this->_front == -1 && this->_rear == -1);
 	}
 	bool isFull() {
-		return (this->_rear == (sizeof(this->_array)/sizeof(int) - 1));
+		return (((this->_rear + 1) % (sizeof(this->_array) / sizeof(int))) == this->_front);
 	}
 public:
 	Queue() {
@@ -32,7 +32,7 @@ public:
 		}
 
 		else {
-			this->_rear++;
+			this->_rear = (this->_rear + 1) % (sizeof(this->_array) / sizeof(int));
 		}
 
 		this->_array[this->_rear] = info;
@@ -49,15 +49,17 @@ public:
 			return temp;
 		}
 		else {
-			int temp = this->_array[this->_front++];
+			int temp = this->_array[this->_front];
+			this->_front = (this->_front + 1) % (sizeof(this->_array) / sizeof(int));
 			return temp;
 		}
 	}
 
 	void PrintQueue() {
 		cout << "Printing queue\n-----------------------------------------------\n";
-		for (int i = this->_front; i <= this->_rear; i++) {
-			cout << "index [" << i << "] = " << this->_array[i] << endl;
+		int counter = (this->_rear + (sizeof(this->_array)/sizeof(int)) - this->_front) % (sizeof(this->_array)/sizeof(int));
+		for (int i = 0; i < counter; i++) {
+			cout << "index [" << i << "] = " << this->_array[(this->_front + i) % (sizeof(this->_array) / sizeof(int))] << endl;
 		}
 		cout << endl;
 	}
@@ -82,15 +84,21 @@ public:
 
 int main() {
 	Queue q;
-	for (int i = 0; i < 5; i++)
-		q.Enqueue(i);
-
-	q.PrintAll();
+	for (int i = 0; i < 11; i++)
+		q.Enqueue(i+1);
+	
+	q.PrintBuffer();
 
 	for (int i = 0; i < 3; i++)
 		cout << "Dequeue: " << q.Dequeue() << endl;
 
-	q.PrintAll();
+	q.PrintQueue();
+
+	for (int i = 0; i < 2; i++)
+		q.Enqueue(i + 11);
+
+	q.PrintBuffer();
+	q.PrintQueue();
 	getchar();
 	return 0;
 }
